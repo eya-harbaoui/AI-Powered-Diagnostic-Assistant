@@ -3,7 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useReportStore } from "./reportStore";
 
 function useReportSelection() {
-  const { setBase64Data,isLoading,setIsLoading } = useReportStore();
+  const { setBase64Data } = useReportStore();
 
   const { toast } = useToast();
 
@@ -20,8 +20,6 @@ function useReportSelection() {
     // Step 3: Check if a file was indeed selected
 
     if (file) {
-      setIsLoading(true);
-
       // Verifying if image and document file types are valid
       let isValidImage = false;
       let isValidDoc = false;
@@ -45,7 +43,6 @@ function useReportSelection() {
           variant: "destructive",
           description: "Filetype not supproted!",
         });
-        setIsLoading(false);
 
         return;
       }
@@ -82,8 +79,6 @@ function useReportSelection() {
           variant: "destructive",
           description: "Error processing file. Please try again.",
         });
-      } finally {
-        setIsLoading(false);
       }
       // Handle file reading
     }
@@ -91,7 +86,6 @@ function useReportSelection() {
 
   return {
     handleReportSelection,
-    isLoading,
   };
 }
 

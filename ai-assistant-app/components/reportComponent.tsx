@@ -7,12 +7,22 @@ import { Textarea } from "./ui/textarea";
 import { useReportSelection } from "../app/Utils/useReportSelection";
 import useExtractDetails from "@/app/Utils/useExtractDetails";
 import { useReportStore } from "@/app/Utils/reportStore";
+import UseAnimations from "react-useanimations";
+import activity from "react-useanimations/lib/activity";
+import { useToast } from "@/hooks/use-toast";
+
 type Props = {};
 
 const ReportComponent = (props: Props) => {
-  const { handleReportSelection, isLoading } = useReportSelection();
+  const { handleReportSelection } = useReportSelection();
   const { extractDetails } = useExtractDetails();
-  const { reportData, setReportData } = useReportStore();
+  const { reportData, setReportData, isLoading } = useReportStore();
+  const { toast } = useToast();
+  const onConfirmation = () => {
+    toast({
+      description: "Updated",
+    });
+  };
 
   return (
     <div className="grid w-full items-start gap-6 overflow-auto p-4 pt-0">
@@ -23,7 +33,21 @@ const ReportComponent = (props: Props) => {
             <h3>Report </h3>
           </div>
         </legend>
-        <div className="absolute z-10 h-full w-full bg-card/90 rounded-lg"></div>
+        {isLoading && (
+          <div className="absolute z-10 h-full w-full bg-card/90 rounded-lg flex flex-row items-center justify-center">
+            <span className="text-base font-medium text-header-title">
+              Extracting
+            </span>
+            <UseAnimations
+              size={50}
+              wrapperStyle={{ marginTop: "5px", marginRight: "3px" }}
+              animation={activity}
+              strokeColor="var(--error-bg)"
+              pathCss="stroke-width: 5%;"
+            />
+          </div>
+        )}
+
         <Input
           type="file"
           onChange={(event) => {
@@ -49,7 +73,10 @@ const ReportComponent = (props: Props) => {
             setReportData(e.target.value);
           }}
         />
-        <Button className="bg-button-bg text-sm text-button-tx font-meduim border border-button-bd hover:bg-button-bg hover:opacity-80 hover:text-button-tx hover:border hover:border-button-bd">
+        <Button
+          className="bg-button-bg text-sm text-button-tx font-meduim border border-button-bd hover:bg-button-bg hover:opacity-80 hover:text-button-tx hover:border hover:border-button-bd"
+          onClick={onConfirmation}
+        >
           2. Looks good
         </Button>
       </fieldset>

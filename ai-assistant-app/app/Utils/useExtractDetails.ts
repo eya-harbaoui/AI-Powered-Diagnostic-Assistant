@@ -5,18 +5,11 @@ import { useEffect } from "react";
 import { useReportStore } from "./reportStore";
 
 const useExtractDetails = () => {
-  const { base64Data, setReportData, isLoading, setIsLoading } =
-    useReportStore();
+  const { base64Data, setReportData, setIsLoading } = useReportStore();
   const { toast } = useToast();
   async function extractDetails(): Promise<void> {
     console.log("here is the base64data", base64Data);
-    if (isLoading) {
-      toast({
-        variant: "destructive",
-        description: "Please wait while the file is being processed...",
-      });
-      return;
-    }
+
     if (!base64Data) {
       toast({
         variant: "destructive",

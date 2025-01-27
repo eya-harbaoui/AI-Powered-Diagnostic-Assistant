@@ -38,6 +38,8 @@ body {
     --button-bg: white;
     --button-bd: var(--header-title);
     --button-tx: var(--header-title);
+    --success-bg: #cff9fd;
+    --error-bg: #f24949;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -69,6 +71,7 @@ body {
     --button-bg: var(--foreground);
     --button-bd: var(--header-title);
     --button-tx: var(--header-title);
+    --error-bg: #731a1a;
   }
 }
 
