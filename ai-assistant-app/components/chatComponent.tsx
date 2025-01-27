@@ -5,15 +5,23 @@ import { Badge } from "./ui/badge";
 import { useChat } from "ai/react";
 import MessageBox from "./messagesBox";
 import { Textarea } from "./ui/textarea";
-import { CornerDownLeft, Loader2 } from "lucide-react";
+import { CornerDownLeft, Loader2, TextSearch } from "lucide-react";
 import { Button } from "./ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./ui/accordion";
+import Markdown from "./markdown";
+import Messages from "./messages";
 
 type Props = {
   reportData: string;
 };
 
 const chatComponent = ({ reportData }: Props) => {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
+  const { messages, input, handleInputChange, handleSubmit, isLoading, data } =
     useChat({
       api: "api/medichatgemini",
     });
@@ -28,12 +36,24 @@ const chatComponent = ({ reportData }: Props) => {
       >
         {reportData ? "Report added" : "No report added !"}
       </Badge>
-      <div className="flex-1"></div>
-      <div className="flex flex-col gap-4">
-        {messages.map((m, idx) => {
-          return <MessageBox key={idx} role={m.role} content={m.content} />;
-        })}
-      </div>
+      <div className="flex-1" />
+      <Messages messages={messages} isLoading={isLoading} />
+      {data?.length !== undefined && data.length > 0 && (
+        <Accordion type="single" className="text-sm" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger dir="">
+              <span className="flex flex-row items-center gap-2">
+                <TextSearch /> Relevant Info
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="whitespace-pre-wrap">
+              <Markdown
+                content={(data[data.length - 1] as any).retrievals as string}
+              />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
       <form
         className="relative overflow-hidden rounded-lg border bg-background"
         onSubmit={(event) => {

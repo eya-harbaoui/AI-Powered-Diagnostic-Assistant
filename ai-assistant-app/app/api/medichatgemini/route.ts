@@ -1,4 +1,4 @@
-import { queryPineconeVectorStore } from "../../../utils";
+import { queryPineconeVectorStore } from "../../utils";
 import { Pinecone } from "@pinecone-database/pinecone";
 // import { Message, OpenAIStream, StreamData, StreamingTextResponse } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
@@ -9,7 +9,7 @@ export const maxDuration = 60;
 // export const runtime = 'edge';
 
 const pinecone = new Pinecone({
-  apiKey: process.env.PINECONE_API_KEY ?? "",
+  apiKey: process.env.PINECONE_API_KEY!,
 });
 
 const google = createGoogleGenerativeAI({
@@ -27,7 +27,7 @@ const model = google("models/gemini-1.5-pro-latest", {
 
 export async function POST(req: Request, res: Response) {
   const reqBody = await req.json();
-  console.log(reqBody);
+  console.log("reqBody", reqBody);
 
   const messages: Message[] = reqBody.messages;
   const userQuestion = `${messages[messages.length - 1].content}`;
@@ -41,6 +41,7 @@ export async function POST(req: Request, res: Response) {
     "testspace",
     query
   );
+  console.log("retrivals", retrievals);
 
   const finalPrompt = `Here is a summary of a patient's clinical report, and a user query. Some generic clinical findings are also provided that may or may not be relevant for the report.
   Go through the clinical report and answer the user query.
